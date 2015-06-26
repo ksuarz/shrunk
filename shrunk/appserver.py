@@ -12,6 +12,7 @@ from shrunk.forms import LinkForm, RULoginForm, BlacklistUserForm, AddAdminForm
 from shrunk.user import User, get_user, admin_required
 from shrunk.util import get_db_client, set_logger, formattime
 
+import pyperclip
 
 # Create application
 app = Flask(__name__)
@@ -262,6 +263,12 @@ def edit_link():
                                             title=title,
                                             short_url=short_url,
                                             long_url=long_url)
+
+@app.route("/clip", methods=["GET"])
+def copy_link():
+    url = app.config["LINKSERVER_URL"] + "/" + request.args["url"]
+    pyperclip.copy(url) 
+    return render_index(copied=True)
 
 @app.route("/admin/")
 @app.route("/admin/<action>", methods=["GET", "POST"])

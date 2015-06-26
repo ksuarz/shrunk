@@ -25,6 +25,11 @@
         You are not the owner of this URL...
     </div>
     {% endif %}
+    {% if copied %}
+    <div class="shrunk-messages">
+        Link copied to clipboard!
+    </div>
+    {% endif %}
     {% for link in links %}
         <article class="link-group clearfix">
             <div class="link-info" style="clear: both;">
@@ -44,7 +49,7 @@
                     </a>
                 </div>
                 <div class="short-link">
-                    <a href="{{ linkserver_url }}/{{ link['_id'] }}" target="_blank">{{ linkserver_url }}/{{ link['_id'] }}</a> 
+                    <a href="{{ url_for('copy_link', url=link['_id']) }}">{{ linkserver_url }}/{{ link['_id'] }}</a> 
                     <span class="original-url"> &#8594 {{ link['long_url'] }} </span>
                 </div>
                 {% if admin %}
