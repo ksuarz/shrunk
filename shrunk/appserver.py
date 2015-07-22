@@ -98,7 +98,7 @@ except KeyError:
 
 
 @app.route("/")
-def render_index(**kwargs):
+def homepage(**kwargs):
     """Renders the homepage.
 
     Renders the homepage for the current user. By default, this renders all of

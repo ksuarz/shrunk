@@ -69,7 +69,7 @@
     <div class="page-box">
         <div class="prev">
         {% if page > 1 %}
-            <span class="prev"><a href="{{ url_for('render_index', p=page-1, search=query)
+            <span class="prev"><a href="{{ url_for('homepage', p=page-1, search=query)
             }}"><span aria-hidden="true">&laquo;</span></a></span>
         {% else %}
             <span class="prev disabled"><span
@@ -80,16 +80,16 @@
         <div class="page-numbers">
         {% for pg in range(1, lastpage + 1) %}
             {% if pg == page %}
-                <span class="page active"><a href="{{ url_for('render_index', p=pg) }}">{{ pg }}</a></span>
+                <span class="page active"><a href="{{ url_for('homepage', p=pg) }}">{{ pg }}</a></span>
             {% else %}
-                <span class="page"><a href="{{ url_for('render_index', p=pg) }}">{{ pg }}</a></span>
+                <span class="page"><a href="{{ url_for('homepage', p=pg) }}">{{ pg }}</a></span>
             {% endif %}
         {% endfor %}
         </div>
 
         <div class="next">
         {% if page < lastpage %}
-            <span class="next"><a href="{{ url_for('render_index', p=page+1, search=query) }}">
+            <span class="next"><a href="{{ url_for('homepage', p=page+1, search=query) }}">
             <span aria-hidden="true">&raquo;</span></a></span>
         {% else %}
             <span class="next disabled"><span
