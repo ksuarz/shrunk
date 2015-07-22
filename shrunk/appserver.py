@@ -180,6 +180,23 @@ def render_index(**kwargs):
     return resp
 
 
+@app.route("/search")
+@app.route("/search/<query>")
+@app.route("/search/<query>/page/<page>")
+def search(query=None, page=None):
+    """Perform a search.
+
+    Search through the available links, only displaying relevant results.
+
+    :Parameters:
+      - `query` (optional): The query to search for. It is up to the client to
+        determine which links in the database match the query.
+      - `page` (optional): The page number of the search results. If omitted,
+        returns the first page
+    """
+    pass
+
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     """Handles authentication."""
