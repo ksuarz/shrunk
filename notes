@@ -1,0 +1,5 @@
+We want the following routes:
+
+/page/<#>
+/search/<query>
+/search/<query>/page/<#>
