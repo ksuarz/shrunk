@@ -183,7 +183,7 @@ def homepage(**kwargs):
 @app.route("/search")
 @app.route("/search/<query>")
 @app.route("/search/<query>/page/<page>")
-def search(query=None, page=None):
+def search(query=None, page=None, **kwargs):
     """Perform a search.
 
     Search through the available links, only displaying relevant results.
@@ -194,7 +194,49 @@ def search(query=None, page=None):
       - `page` (optional): The page number of the search results. If omitted,
         returns the first page
     """
-    pass
+    client = get_db_client(app, g)
+    if not hasattr(current_user, "netid"):
+        # Anonymous user
+        return redirect("/login")
+
+    # Grab the current page number
+    try:
+        page = int(request.args["p"])
+    except:
+        page = 0
+
+    # Change sorting preferences
+    if "sortby" in request.args:
+        sortby = request.args["sortby"]
+    elif "sortby" in request.cookies:
+        sortby = request.cookies["sortby"]
+    else:
+        sortby = "0"
+
+    is_admin = not current_user.is_anonymous() and current_user.is_admin()
+    if query is None:
+        # TODO Make a dedicated search page
+        return redirect("/")
+    elif is_admin:
+        cursor = client.search(query)
+    else:
+        cursor = client.search(query, netid=current_user.netid)
+
+    page, lastpage = cursor.paginate(page, app.config["MAX_DISPLAY_LINKS"])
+    links = cursor.get_results()
+
+    resp = make_response(
+            render_template("index.html",
+                            admin=is_admin,
+                            lastpage=lastpage,
+                            links=links,
+                            linkserver_url=app.config["LINKSERVER_URL"],
+                            netid=current_user.netid,
+                            page=page,
+                            query=query,
+                            sortby=sortby,
+                            **kwargs))
+    return resp
 
 
 @app.route("/login", methods=['GET', 'POST'])

@@ -41,3 +41,11 @@ def formattime(datetime):
     This formats datetimes to look like "Nov 19 2015".
     """
     return datetime.strftime("%b %d %Y")
+
+
+def get_links(app, cursor, response):
+    result = {}
+
+    result["page"], result["lastpage"] = cursor.paginate(page, app.config["MAX_DISPLAY_LINKS"])
+    result["links"] = cursor.get_results()
+    return result
