@@ -2,17 +2,6 @@
 {% block content %}
 <div class="links-box col-xs-12 col-sm-8 col-sm-offset-1">
     <h1>Shorten URL</h1>
-    {% if errors %}
-    {% for error in errors %}
-    {{ error }}
-        {% for suberror in errors[error] %}
-            {{ suberror }}
-        {% endfor %}
-    {% endfor %}
-    <div class="error">
-        Please fix the errors and resubmit!
-    </div>
-    {% endif %}
     <article class="add-group clearfix">
         <form method="POST" action="{{ url_for('add_link') }}" name="link_form" class="add-link" novalidate="novalidate">
             <div class="item">
@@ -39,6 +28,13 @@
             </div>
             <div class="item">
                 <label for="short_url">Custom Alias (Optional)</label>
+                {% if errors %}
+                    {% if errors["short_url"] %}
+                        {% for suberror in errors["short_url"] %}
+                        <span class="error">{{ suberror }}</span>
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
                 <input type="text" class="form-control" id="short_url" name="short_url" placeholder="Custom URL Name">
             </div>
             <div class="netID">

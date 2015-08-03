@@ -4,7 +4,7 @@ Forms used for the application.
 """
 import re
 
-from wtforms import Form, TextField, PasswordField, RadioField, validators
+from wtforms import Form, TextField, PasswordField, RadioField, validators, ValidationError
 from flask_auth import LoginForm
 
 import shrunk.filters
@@ -49,11 +49,13 @@ class LinkForm(Form):
 
     def to_json(self):
         """Exports the form"s fields into a JSON-compatible dictionary."""
-        return {
+        data = {
             "long_url": self.long_url.data,
             "title": self.title.data,
-            "short_url": self.short_url.data
         }
+        if self.short_url.data != "":
+            data["short_url"] = self.short_url.data
+        return data
 
 
 class RULoginForm(LoginForm):
