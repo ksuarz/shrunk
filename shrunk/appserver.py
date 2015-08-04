@@ -256,20 +256,16 @@ def edit_link():
     will be edited.
     """
     client = get_db_client(app, g)
-    form = LinkForm(request.form)
+    form = LinkForm(request.form,
+                    banlist=[strip_protocol(app.config["LINKSERVER_URL"])])
 
     if request.method == "POST":
         # Validate form before continuing
-        if form.long_url.data.startswith(app.config['LINKSERVER_URL']) or form.long_url.data.startswith(app.config['LINKSERVER_URL'][:7]):
-            return render_template("add.html",
-                                    errors=["Blocked Link"],
-                                    admin=current_user.is_admin()
-            )
         if form.validate():
             # Success - make the edits in the database
             kwargs = form.to_json()
             response = client.modify_url(
-                request.form["short_url"],
+                old_short_url = request.form["old_short_url"],
                 **kwargs
             )
             return redirect("/")
@@ -279,26 +275,25 @@ def edit_link():
             if form.validate():
                 kwargs = form.to_json()
                 response = client.modify_url(
-                    request.form["short_url"],
                     **kwargs
                 )
                 return redirect("/")
             else:
                 # Validation error
-                short_url = request.form["short_url"]
-                info = client.get_url_info(short_url)
+                old_short_url = request.form["old_short_url"]
+                info = client.get_url_info(old_short_url)
                 long_url = info["long_url"]
                 title = info["title"]
                 return render_template("edit.html",
                                     errors=form.errors,
                                     netid=current_user.netid,
                                     title=title,
-                                    short_url=short_url,
+                                    old_short_url=old_short_url,
                                     long_url=long_url)
     else: # GET request
         # Hit the database to get information
-        short_url = request.args["url"]
-        info = client.get_url_info(short_url)
+        old_short_url = request.args["url"]
+        info = client.get_url_info(old_short_url)
         owner = info["netid"]
         if owner != current_user.netid and not current_user.is_admin():
             return render_index(wrong_owner=True)
@@ -308,7 +303,7 @@ def edit_link():
         # Render the edit template
         return render_template("edit.html", netid=current_user.netid,
                                             title=title,
-                                            short_url=short_url,
+                                            old_short_url=old_short_url,
                                             long_url=long_url)
 
 

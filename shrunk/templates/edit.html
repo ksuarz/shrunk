@@ -35,11 +35,11 @@
                         {% endfor %}
                     {% endif %}
                 {% endif %}
-                <input type="text" class="form-control" id="short_url" name="short_url" placeholder="Custom URL Name">
+                <input type="text" class="form-control" id="short_url" name="short_url" value="{{ short_url }}" placeholder="Custom URL Name">
             </div>
             <div class="info">
                 <input type="hidden" id="netid" name="netid" value="{{ netid }}">
-                <input type="hidden" id="short_url" name="short_url" value="{{ short_url }}">
+                <input type="hidden" id="old_short_url" name="old_short_url" value="{{ old_short_url }}">
             </div>
             <button type="submit" class="shrink-button btn btn-default">EDIT</button>
         </form>
