@@ -1,0 +1,3 @@
+[submodule "src/flask-auth"]
+	path = src/flask-auth
+	url = gh:katiepru/python3-flask-auth
